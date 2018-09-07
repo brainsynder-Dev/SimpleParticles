@@ -1,0 +1,20 @@
+# Use openjdk8
+language: java
+jdk: openjdk8
+
+# Cache for faster build time
+cache:
+  directories:
+  - $HOME/.m2
+
+notifications:
+  webhooks:
+    urls:
+      - https://discord.pluginwiki.us/travis.php
+    on_success: always
+    on_failure: always
+    on_start: always
+
+before_install: "bash fetch_dependencies.sh"
+
+script: "mvn -B package"
