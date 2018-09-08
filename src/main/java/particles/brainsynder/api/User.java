@@ -10,11 +10,24 @@ import simple.brainsynder.api.ParticleMaker;
 import simple.brainsynder.nms.IParticleSender;
 import simple.brainsynder.reflection.FieldAccessor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
+    private static Map<String, User> users = new HashMap<>();
+
+    public static User getUser (Player player) {
+        if (users.containsKey(player.getUniqueId().toString())) return users.get(player.getUniqueId().toString());
+        User user = new User (player);
+        users.put(player.getUniqueId().toString(), user);
+        return users.get(player.getUniqueId().toString());
+    }
+
     private ParticleMaker maker;
     private ParticleMaker.Particle particle;
     private Shape shape;
     private ItemStack item;
+    private boolean running = false;
     private IParticleSender.DustOptions dustOptions;
     private BukkitRunnable runnable;
     private Player player;
@@ -52,11 +65,13 @@ public class User {
     public void start () {
         if (shape == null) return;
         if (runnable == null) return;
+        running = true;
         runnable.runTaskTimer(SimpleParticles.getProvidingPlugin(SimpleParticles.class), 0, shape.getTickSpeed());
     }
 
     public void stop () {
         if (runnable == null) return;
+        running = false;
         runnable.cancel();
 
         FieldAccessor<BukkitTask> task = FieldAccessor.getField(BukkitRunnable.class, "task", BukkitTask.class);
@@ -92,5 +107,8 @@ public class User {
     }
     public ParticleMaker getMaker() {
         return maker;
+    }
+    public boolean isRunning() {
+        return running;
     }
 }

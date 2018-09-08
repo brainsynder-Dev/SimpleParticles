@@ -18,15 +18,15 @@ public abstract class ShapeKey implements Shape {
      */
     public ShapeKey () {
         json = new JSONObject();
-        json.put("enabled", true);
-        json.put("count", 1);
-        json.put("tick_speed", 1);
+        json.put("enabled", "true");
+        json.put("count", "1");
+        json.put("tick_speed", "1");
         json.put("item", getDefaultItem().toJSON());
 
         JSONObject offset = new JSONObject();
-        offset.put("x", 0F);
-        offset.put("y", 0F);
-        offset.put("z", 0F);
+        offset.put("x", "0");
+        offset.put("y", "0");
+        offset.put("z", "0");
         json.put("particle_offset", offset);
         init(json);
     }
@@ -42,7 +42,7 @@ public abstract class ShapeKey implements Shape {
     public void init (JSONObject json) {
         if (json.containsKey("enabled")) enabled = Boolean.valueOf(String.valueOf(json.get("enabled")));
         if (json.containsKey("count")) count = Integer.parseInt(String.valueOf(json.get("count")));
-        if (json.containsKey("tick_speed")) tickSpeed = Integer.parseInt(String.valueOf(json.get("tickSpeed")));
+        if (json.containsKey("tick_speed")) tickSpeed = Integer.parseInt(String.valueOf(json.get("tick_speed")));
         if (json.containsKey("particle_offset")) {
             JSONObject offset = (JSONObject) json.get("particle_offset");
             float offsetX=0, offsetY=0, offsetZ=0;

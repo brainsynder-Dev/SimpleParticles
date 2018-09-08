@@ -3,11 +3,19 @@ package particles.brainsynder.shape;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
 import simple.brainsynder.api.ItemBuilder;
 import simple.brainsynder.api.ParticleMaker;
 
 public class Circle extends ShapeKey {
     private float pos = 0.0F;
+
+    public Circle () {
+        super();
+    }
+    public Circle (JSONObject json) {
+        super(json);
+    }
 
     @Override
     public ItemBuilder getDefaultItem() {
