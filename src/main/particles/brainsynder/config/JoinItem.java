@@ -12,7 +12,8 @@ import java.util.List;
 public class JoinItem extends ItemStack {
 
     public JoinItem() {
-        Configuration config = SimpleParticles.getInstance().getConfiguration();
+        // This should be changed to the new code... aka ItemBuilder
+        Configuration config = SimpleParticles.getPlugin(SimpleParticles.class).getConfiguration();
         this.setType(Material.getMaterial(config.getString("join-item.item.material")));
         setDurability((short) config.getInt("join-item.item.data")); // Another way of setting data for older versions
         ItemMeta meta = getItemMeta();
