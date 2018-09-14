@@ -7,3 +7,6 @@ api-version: 1.13
 commands:
   sp_test:
     description: TestCommand for SimpleParticles
+  simpleparticles:
+    description: Main command for SimpleParticles
+    aliases: [sp,particles]
