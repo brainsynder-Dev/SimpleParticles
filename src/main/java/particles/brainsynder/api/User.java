@@ -53,11 +53,33 @@ public class User {
         maker = new ParticleMaker(particle, shape.getParticleCount(), shape.getOffsetX(), shape.getOffsetY(), shape.getOffsetZ());
         if (item != null) maker.setData(item);
         if (dustOptions != null) maker.setDustOptions(dustOptions);
-        if (runnable != null) runnable.cancel();
+        if ((runnable != null) && running) runnable.cancel();
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                shape.run(player, maker);
+                if (!running) return;
+                if (player == null) {
+                    cancel();
+                    return;
+                }
+                if (!player.isOnline()) {
+                    cancel();
+                    return;
+                }
+                if (player.isDead() || (!player.isValid())) {
+                    cancel();
+                    return;
+                }
+                if (shape == null) {
+                    cancel();
+                    return;
+                }
+                if (maker == null) {
+                    cancel();
+                    return;
+                }
+
+                shape.run(player.getLocation().clone(), maker);
             }
         };
     }
@@ -68,7 +90,6 @@ public class User {
         running = true;
         runnable.runTaskTimer(SimpleParticles.getProvidingPlugin(SimpleParticles.class), 0, shape.getTickSpeed());
     }
-
     public void stop () {
         if (runnable == null) return;
         running = false;
@@ -81,6 +102,12 @@ public class User {
     public void clear () {
         if (runnable != null) runnable.cancel();
         runnable = null;
+        shape = null;
+        running = false;
+        item = null;
+        dustOptions = null;
+        particle = null;
+        maker = null;
     }
 
     public void setShape(Shape shape) {

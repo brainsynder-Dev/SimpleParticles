@@ -1,11 +1,14 @@
 package particles.brainsynder.api;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import simple.brainsynder.api.ItemBuilder;
 import simple.brainsynder.api.ParticleMaker;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface Shape {
 
@@ -39,13 +42,18 @@ public interface Shape {
         return 1;
     }
 
-    default void run(Player player, ParticleMaker particle) {}
+    default List<ParticleMaker.Particle> blockedParticles () {
+        return new ArrayList<>();
+    }
 
-    default Shape newInstance () {
+    default void run(Location location, ParticleMaker maker) {}
+
+    default Shape newInstance (JSONObject json) {
         try {
             Constructor constructor = getClass().getConstructor(JSONObject.class);
-            return (Shape) constructor.newInstance(getJson());
+            return (Shape) constructor.newInstance(json);
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
     }

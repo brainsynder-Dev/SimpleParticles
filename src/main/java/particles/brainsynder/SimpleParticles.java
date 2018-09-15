@@ -8,6 +8,7 @@ import simple.brainsynder.commands.CommandRegistry;
 
 public class SimpleParticles extends JavaPlugin {
 
+    private boolean outputTimes = false;
     private Configuration config;
     private ShapeManager shapeManager;
 
@@ -32,5 +33,13 @@ public class SimpleParticles extends JavaPlugin {
 
     public ShapeManager getShapeManager() {
         return shapeManager;
+    }
+
+    public boolean canOutputTimes() {
+        return outputTimes;
+    }
+
+    public void setOutputTimes(boolean outputTimes) {
+        this.outputTimes = outputTimes;
     }
 }
