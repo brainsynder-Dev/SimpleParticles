@@ -1,7 +1,7 @@
 package particles.brainsynder;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import particles.brainsynder.commands.TestCommand;
+import particles.brainsynder.commands.CommandSimpleParticles;
 import particles.brainsynder.config.Configuration;
 import particles.brainsynder.shape.ShapeManager;
 import simple.brainsynder.commands.CommandRegistry;
@@ -19,8 +19,16 @@ public class SimpleParticles extends JavaPlugin {
 
         try {
             CommandRegistry<SimpleParticles> registry = new CommandRegistry<>(this);
-            registry.register(new TestCommand());
-        }catch (Exception ignored) {}
+            registry.register(new CommandSimpleParticles(this));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        shapeManager.unload();
+        shapeManager = null;
     }
 
     private void loadConfiguration() {
