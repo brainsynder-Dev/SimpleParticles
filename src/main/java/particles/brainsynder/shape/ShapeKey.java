@@ -1,8 +1,11 @@
 package particles.brainsynder.shape;
 
+import org.apache.commons.lang.WordUtils;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import particles.brainsynder.api.Shape;
+import particles.brainsynder.utils.Utilities;
 import simple.brainsynder.api.ItemBuilder;
 import simple.brainsynder.storage.TriLoc;
 
@@ -11,23 +14,24 @@ public abstract class ShapeKey implements Shape {
     private TriLoc<Float> offsets;
     private boolean enabled = true;
     private ItemBuilder item;
-    private int count = 1, tickSpeed = 1;
+    private int count = 1, tickSpeed = 1, tested = 0, counter = 0;
 
     /**
      * Loads default JSON data...
      */
     public ShapeKey () {
         json = new JSONObject();
-        json.put("enabled", "true");
-        json.put("count", "1");
-        json.put("tick_speed", "1");
+        json.put("enabled", true);
+        json.put("count", 1);
+        json.put("tick_speed", 1);
         json.put("item", getDefaultItem().toJSON());
 
         JSONObject offset = new JSONObject();
-        offset.put("x", "0");
-        offset.put("y", "0");
-        offset.put("z", "0");
+        offset.put("x", 0);
+        offset.put("y", 0);
+        offset.put("z", 0);
         json.put("particle_offset", offset);
+        initDefaults(json);
         init(json);
     }
 
@@ -59,6 +63,29 @@ public abstract class ShapeKey implements Shape {
             this.json.put("item", getDefaultItem().toJSON());
             item = getDefaultItem();
         }
+    }
+
+    void runSpeedTest() {
+        if (tested >= 10) return;
+        Utilities.findDelay(getClass(), "shape");
+        tested++;
+    }
+
+    void output(String message) {
+        if (counter == 0) {
+            System.out.println(message);
+            counter = 6;
+            return;
+        }
+
+        counter--;
+    }
+
+    public void initDefaults (JSONObject json){}
+
+    @Override
+    public ItemBuilder getDefaultItem() {
+        return new ItemBuilder(Material.DIAMOND).withName("&a"+ WordUtils.capitalize(getName()));
     }
 
     @Override

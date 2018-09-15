@@ -1,14 +1,11 @@
 package particles.brainsynder.shape;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
-import simple.brainsynder.api.ItemBuilder;
 import simple.brainsynder.api.ParticleMaker;
 
 public class Circle extends ShapeKey {
-    private float pos = 0.0F;
+    private float rotation = 0.0F;
 
     public Circle () {
         super();
@@ -18,18 +15,17 @@ public class Circle extends ShapeKey {
     }
 
     @Override
-    public ItemBuilder getDefaultItem() {
-        return new ItemBuilder(Material.DIAMOND).withName("&aCircle");
-    }
-
-    @Override
-    public void run(Player player, ParticleMaker maker) {
-        Location loc = player.getLocation ();
+    public void run(Location loc, ParticleMaker maker) {
+        runSpeedTest();
         loc.add(0.0D, 1.5D, 0.0D);
-        loc.add(Math.cos(0.785398163397448D * pos) * 0.4D, 0.0D, Math.sin(0.785398163397448D * pos) * 0.4D);
+        double radius = 0.4;
+        double x = Math.cos(0.785398163397448D * rotation) * radius;
+        double z = Math.sin(0.785398163397448D * rotation) * radius;
+        loc.add(x, 0.0D, z);
 
         maker.sendToLocation(loc.add(0.0D, 1.0D, 0.0D));
 
-        pos = ((float) (pos + 0.3D));
+        rotation = ((float) (rotation + 0.3D));
+        runSpeedTest();
     }
 }
