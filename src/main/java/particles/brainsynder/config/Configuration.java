@@ -15,7 +15,7 @@ public class Configuration extends FileMaker {
         setDefault("join-item.enabled", true);
         setDefault("join-item.can-not-drop", true);
         setDefault("join-item.can-not-move", true);
-        setDefault("join-item.inventory-slot", 1);
+        setDefault("join-item.inventories-slot", 1);
         setDefault("join-item.item.material", Material.BOOK.name());
         setDefault("join-item.item.data", 0);
         setDefault("join-item.item.display-name", "&eSimpleParticles &6&l>> &7Selector");
