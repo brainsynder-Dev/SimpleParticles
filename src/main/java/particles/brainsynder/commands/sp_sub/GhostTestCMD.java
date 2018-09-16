@@ -3,6 +3,7 @@ package particles.brainsynder.commands.sp_sub;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -141,5 +142,10 @@ public class GhostTestCMD extends ParticleSub {
     private Block getTargetBlock(Player player) {
         List<Block> lastTwoTargetBlocks = player.getLastTwoTargetBlocks(null, 100);
         return lastTwoTargetBlocks.get(1);
+    }
+
+    @Override
+    public boolean canExecute(CommandSender sender) {
+        return sender.hasPermission("simpleparticles.command.ghost");
     }
 }
