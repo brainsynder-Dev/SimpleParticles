@@ -47,6 +47,7 @@ public class ShapeManager {
         register.add(new Helix());
         register.add(new Helix2());
         register.add(new Moon());
+        register.add(new OlympicRings());
         register.add(new Orbit());
         register.add(new Rings());
         register.add(new Ripple());
