@@ -1,6 +1,5 @@
 package particles.brainsynder.commands.sp_sub;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -8,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import particles.brainsynder.SimpleParticles;
 import particles.brainsynder.api.Shape;
 import particles.brainsynder.api.User;
+import particles.brainsynder.cape.CapeMaker;
 import particles.brainsynder.commands.CommandSimpleParticles;
 import particles.brainsynder.commands.ParticleSub;
 import particles.brainsynder.utils.Utilities;
@@ -50,8 +50,16 @@ public class SetSubCommand extends ParticleSub {
         }
         SimpleParticles core = particles.getSimpleParticles();
         Shape shape = core.getShapeManager().getShape(args[0]);
+        if (shape == null) shape = core.getCustomManager().getCape(messageMaker(args, 0));
         if (shape == null) return;
 
+        if (shape instanceof CapeMaker) {
+            user.setShape(shape);
+            if (user.isRunning()) user.stop();
+            user.initShape(ParticleMaker.Particle.REDSTONE, null, null);
+            user.start();
+            return;
+        }
         if (args.length == 1) {
             sendUsage(player);
             return;
@@ -75,7 +83,6 @@ public class SetSubCommand extends ParticleSub {
                 material = Material.getMaterial(args[2]);
             }
 
-            Bukkit.broadcastMessage("Starting shape: "+shape.getName());
             user.initShape(particle, new ItemStack(material), null);
             user.start();
             return;
@@ -88,12 +95,10 @@ public class SetSubCommand extends ParticleSub {
                 color = Utilities.formatColor(args[2]);
             }
 
-            Bukkit.broadcastMessage("Starting shape: "+shape.getName());
             user.initShape(particle, null, new IParticleSender.DustOptions(color, 1.0F));
             user.start();
             return;
         }
-        Bukkit.broadcastMessage("Starting shape: "+shape.getName());
         user.initShape(particle, null, null);
         user.start();
     }

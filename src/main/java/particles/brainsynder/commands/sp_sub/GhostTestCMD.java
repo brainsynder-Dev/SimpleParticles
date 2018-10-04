@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import particles.brainsynder.SimpleParticles;
 import particles.brainsynder.api.Shape;
 import particles.brainsynder.api.User;
+import particles.brainsynder.cape.CapeMaker;
 import particles.brainsynder.commands.CommandSimpleParticles;
 import particles.brainsynder.commands.ParticleSub;
 import particles.brainsynder.utils.Utilities;
@@ -59,8 +60,43 @@ public class GhostTestCMD extends ParticleSub {
         }
         SimpleParticles core = particles.getSimpleParticles();
         Shape shape = core.getShapeManager().getShape(args[0]);
+        if (shape == null) shape = core.getCustomManager().getCape(messageMaker(args, 0));
         if (shape == null) return;
 
+        if (shape instanceof CapeMaker) {
+            Entity entity = getEntity(player);
+            if (entity == null) {
+                player.sendMessage("§cYou are not looking at a block that has an entity on it");
+                return;
+            }
+            String uuid = entity.getUniqueId().toString();
+            if (map.containsKey(uuid)) {
+                map.get(uuid).cancel();
+                map.remove(uuid);
+            }
+
+            Shape finalShape = shape;
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!map.containsKey(uuid)) {
+                        cancel();
+                        return;
+                    }
+
+                    if (entity.isDead() || (!entity.isValid())) {
+                        cancel();
+                        return;
+                    }
+
+                    finalShape.run(entity.getLocation().clone());
+                }
+            };
+            map.put(uuid, runnable);
+            runnable.runTaskTimer(SimpleParticles.getProvidingPlugin(SimpleParticles.class), 0, shape.getTickSpeed());
+
+            return;
+        }
         if (args.length == 1) {
             sendUsage(player);
             return;
@@ -106,6 +142,7 @@ public class GhostTestCMD extends ParticleSub {
             map.remove(uuid);
         }
 
+        Shape finalShape1 = shape;
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -119,7 +156,8 @@ public class GhostTestCMD extends ParticleSub {
                     return;
                 }
 
-                shape.run(entity.getLocation().clone(), maker);
+                finalShape1.run(entity.getLocation().clone(), maker);
+                finalShape1.run(entity.getLocation().clone());
             }
         };
         map.put(uuid, runnable);

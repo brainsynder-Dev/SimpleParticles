@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import particles.brainsynder.SimpleParticles;
 import particles.brainsynder.api.Shape;
+import particles.brainsynder.cape.CapeMaker;
 import particles.brainsynder.commands.sp_sub.ClearSubCommand;
 import particles.brainsynder.commands.sp_sub.GhostTestCMD;
 import particles.brainsynder.commands.sp_sub.SetSubCommand;
@@ -39,6 +40,11 @@ public class CommandSimpleParticles extends ParentCommand {
     public List<String> getShapes () {
         List<String> list = new ArrayList<>();
         for (Shape type : simpleParticles.getShapeManager().getShapes()) {
+            if (type == null) continue;
+            if (!type.isEnabled()) continue;
+            list.add(type.getName());
+        }
+        for (CapeMaker type : simpleParticles.getCustomManager().getCapes()) {
             if (type == null) continue;
             if (!type.isEnabled()) continue;
             list.add(type.getName());
