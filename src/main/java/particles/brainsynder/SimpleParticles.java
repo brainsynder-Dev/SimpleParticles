@@ -1,6 +1,7 @@
 package particles.brainsynder;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import particles.brainsynder.cape.CustomManager;
 import particles.brainsynder.commands.CommandSimpleParticles;
 import particles.brainsynder.config.Configuration;
 import particles.brainsynder.shape.ShapeManager;
@@ -11,11 +12,13 @@ public class SimpleParticles extends JavaPlugin {
     private boolean outputTimes = false;
     private Configuration config;
     private ShapeManager shapeManager;
+    private CustomManager customManager;
 
     @Override
     public void onEnable() {
         loadConfiguration();
         shapeManager = new ShapeManager();
+        customManager = new CustomManager();
 
         try {
             CommandRegistry<SimpleParticles> registry = new CommandRegistry<>(this);
@@ -28,7 +31,9 @@ public class SimpleParticles extends JavaPlugin {
     @Override
     public void onDisable() {
         shapeManager.unload();
+        customManager.unload();
         shapeManager = null;
+        customManager = null;
     }
 
     private void loadConfiguration() {
@@ -41,6 +46,10 @@ public class SimpleParticles extends JavaPlugin {
 
     public ShapeManager getShapeManager() {
         return shapeManager;
+    }
+
+    public CustomManager getCustomManager() {
+        return customManager;
     }
 
     public boolean canOutputTimes() {

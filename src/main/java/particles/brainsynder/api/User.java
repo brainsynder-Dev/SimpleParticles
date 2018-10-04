@@ -1,11 +1,13 @@
 package particles.brainsynder.api;
 
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import particles.brainsynder.SimpleParticles;
+import particles.brainsynder.cape.CapeMaker;
 import simple.brainsynder.api.ParticleMaker;
 import simple.brainsynder.nms.IParticleSender;
 import simple.brainsynder.reflection.FieldAccessor;
@@ -50,9 +52,11 @@ public class User {
         this.item = item;
         this.dustOptions = dustOptions;
 
-        maker = new ParticleMaker(particle, shape.getParticleCount(), shape.getOffsetX(), shape.getOffsetY(), shape.getOffsetZ());
-        if (item != null) maker.setData(item);
-        if (dustOptions != null) maker.setDustOptions(dustOptions);
+        if (!(shape instanceof CapeMaker)) {
+            maker = new ParticleMaker(particle, shape.getParticleCount(), shape.getOffsetX(), shape.getOffsetY(), shape.getOffsetZ());
+            if (item != null) maker.setData(item);
+            if (dustOptions != null) maker.setDustOptions(dustOptions);
+        }
         if ((runnable != null) && running) runnable.cancel();
         runnable = new BukkitRunnable() {
             @Override
@@ -74,12 +78,17 @@ public class User {
                     cancel();
                     return;
                 }
-                if (maker == null) {
+                if ((!(shape instanceof CapeMaker)) && (maker == null)) {
                     cancel();
                     return;
                 }
 
-                shape.run(player.getLocation().clone(), maker);
+                Location clone = player.getLocation().clone();
+                if (shape instanceof CapeMaker) {
+                    shape.run(clone); // Used for Custom Capes/Wings
+                }else{
+                    shape.run(clone, maker);
+                }
             }
         };
     }

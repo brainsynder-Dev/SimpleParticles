@@ -48,6 +48,9 @@ public interface Shape {
 
     default void run(Location location, ParticleMaker maker) {}
 
+    // This method is limited to the Custom Cape/Wing Shapes
+    default void run(Location location) {}
+
     default Shape newInstance (JSONObject json) {
         try {
             Constructor constructor = getClass().getConstructor(JSONObject.class);

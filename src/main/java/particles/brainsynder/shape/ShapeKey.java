@@ -39,6 +39,15 @@ public abstract class ShapeKey implements Shape {
      * This constructor is to load saved JSON from the shape file
      */
     public ShapeKey (JSONObject json) {
+        this(json, false);
+    }
+    public ShapeKey (JSONObject json, boolean overrideDefaults) {
+        if (!json.containsKey("enabled")) json.put("enabled", true);
+        if (!json.containsKey("count")) json.put("count", 1);
+        if (!json.containsKey("tick_speed")) json.put("tick_speed", 1);
+        if (!json.containsKey("item")) json.put("item", getDefaultItem().toJSON());
+
+        if (overrideDefaults) initDefaults(json);
         this.json = json;
         init(json);
     }
